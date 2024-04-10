@@ -1,0 +1,36 @@
+{% extends "KabasisWebApp/base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<section class="page-section cta" style="margin-top: 30px; margin-bottom: 30px;">
+<div class="container">
+    <div class="row">
+        <div class="col-12 col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="text-center">Confirmación de Orden de Compra</h2>
+                </div>
+                <div class="card-body">
+                    <p class="text-center">Su orden de compra ha sido generada y enviada exitosamente a su correo electrónico. Si necesita enviar la orden a otro correo electrónico, por favor, ingrese el correo a continuación y haga clic en enviar.</p>
+                    
+                    <!-- Formulario para enviar a otro correo -->
+                    <form action="#" method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="otroCorreo">Enviar a otro correo electrónico:</label>
+                            <input type="email" class="form-control" id="otroCorreo" name="otroCorreo" placeholder="Ingrese otro correo electrónico">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Enviar</button>
+                    </form>
+                </div>
+            </div>
+            <!-- Enlace para descargar el PDF generado por ReportLab -->
+            <div class="text-center mt-3">
+                <a href="{% url 'generarPDF' %}" class="btn btn-success">Descargar Orden de Compra como PDF</a>
+            </div>
+        </div>
+    </div>
+</div>
+</section>
+{% endblock %}

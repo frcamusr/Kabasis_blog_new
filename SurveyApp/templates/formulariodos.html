@@ -1,0 +1,152 @@
+{% extends 'KabasisWebApp/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <form method="post" id="question-form">
+                {% csrf_token %}
+                
+                <div class="progress mb-4">
+                    <div class="progress-bar progress-bar-striped bg-success" style="width: {{ porcentaje }}%;">
+                        <div style="position: absolute; width: 100%; color: black; text-align: center;">
+                            Avance: {{ porcentaje }}%
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card shadow-lg p-4">
+                    <div class="question mb-5">
+                        <h3 class="mb-3">{{ pregunta.text }}</h3>
+                        {% if pregunta.question_type == 'text' %}
+                        <textarea class="form-control mb-3" id="text_answer_{{ pregunta.id }}" name="text_answer_{{ pregunta.id }}" rows="3" placeholder="Escribe tu respuesta aquí (máx. 500 caracteres)" ></textarea>
+                        {% elif pregunta.question_type == 'option' %}
+                        <div class="form-check mb-3">
+                            <input type="radio" class="form-check-input" id="option_a_{{ pregunta.id }}" name="option_answer_{{ pregunta.id }}" value="a" required>
+                            <label class="form-check-label" for="option_a_{{ pregunta.id }}">{{ pregunta.option_a }}</label>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input type="radio" class="form-check-input" id="option_b_{{ pregunta.id }}" name="option_answer_{{ pregunta.id }}" value="b" required>
+                            <label class="form-check-label" for="option_b_{{ pregunta.id }}"> {{ pregunta.option_b }}</label>
+                        </div>
+                        {% if pregunta.option_c %}
+                        <div class="form-check mb-3">
+                            <input type="radio" class="form-check-input" id="option_c_{{ pregunta.id }}" name="option_answer_{{ pregunta.id }}" value="c" required>
+                            <label class="form-check-label" for="option_c_{{ pregunta.id }}"> {{ pregunta.option_c }}</label>
+                        </div>
+                        {% endif %}
+                        {% if pregunta.option_d %}
+                        <div class="form-check mb-3">
+                            <input type="radio" class="form-check-input" id="option_d_{{ pregunta.id }}" name="option_answer_{{ pregunta.id }}" value="d" required>
+                            <label class="form-check-label" for="option_d_{{ pregunta.id }}"> {{ pregunta.option_d }}</label>
+                        </div>
+                        {% endif %}
+                        {% endif %}
+                        <input type="hidden" name="question_id" value="{{ pregunta.id }}">
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        {% if previous_question %}
+                        <a href="{% url 'nombre_vista_pregunta' previous_question.id numeracion_pregunta %}" class="btn btn-secondary">Volver a pregunta anterior</a>
+                        {% else %}
+                        <div></div>
+                        {% endif %}
+                        <button type="submit" class="btn btn-primary">Siguiente</button>
+                    </div>
+                </div>    
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modales Bootstrap para mensajes informativos -->
+{% if contador == 8 %}
+<div class="modal fade" id="infoModal8" tabindex="-1" aria-labelledby="infoModal8Label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="infoModal8Label">Descripción de las siguientes preguntas</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Por favor responda VERDADERO o FALSO a las siguientes afirmaciones sobre su conducta en el ámbito tecnológico. Le pedimos el máximo de sinceridad, recuerde que el cuestionario es anónimo.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% elif contador == 27 %}
+<div class="modal fade" id="infoModal27" tabindex="-1" aria-labelledby="infoModal27Label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="infoModal27Label">Descripción de las siguientes preguntas</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        En la siguiente serie de preguntas o afirmaciones, responda la opción que a su parecer es la correcta      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+{% elif contador == 41 %}
+<div class="modal fade" id="infoModal41" tabindex="-1" aria-labelledby="infoModal41Label" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="infoModal41Label">Descripción de las siguientes preguntas</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Por favor responda VERDADERO o FALSO a las siguientes afirmaciones sobre la seguridad informática dentro de la organización.
+        No existen respuestas correctas o incorrectas, por lo cual le pedimos el máximo de sinceridad.
+              </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var contador = {{ contador }};
+    if (contador == 8) {
+        $('#infoModal8').modal('show');
+    } else if (contador == 27) {
+        // Asume que tienes un modal con ID 'infoModal27' para el contador 27
+        $('#infoModal27').modal('show');
+    } else if (contador == 41) {
+        // Asume que tienes un modal con ID 'infoModal41' para el contador 41
+        $('#infoModal41').modal('show');
+    }
+    
+    // Opcional: Envía el formulario automáticamente para preguntas de tipo 'option'
+    if ("{{ pregunta.question_type }}" === "option") {
+        document.querySelectorAll('#question-form input[type="radio"]').forEach(function(radio) {
+            radio.addEventListener('change', function() {
+                document.getElementById('question-form').submit();
+            });
+        });
+        document.querySelector('#question-form button[type="submit"]').style.display = 'none';
+    }
+});
+</script>
+{% endblock %}

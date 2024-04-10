@@ -1,0 +1,63 @@
+{% extends "KabasisWebApp/base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmación de Orden de Compra</title>
+    <!-- Asegúrate de incluir Bootstrap aquí si tu base.html no lo hace -->
+</head>
+<body>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h2 class="mb-4 text-center">Confirmación de Orden de Compra</h2>
+            
+            <!-- Sección de confirmación de datos del comprador -->
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h3>Datos del Comprador</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Tipo de Documento:</strong> {{ datos_comprador.tipoDocumento }}</p>
+                    <p><strong>RUT Empresa:</strong> {{ datos_comprador.rutEmpresa }}</p>
+                    <p><strong>Razón Social:</strong> {{ datos_comprador.razonSocial }}</p>
+                    <p><strong>Giro:</strong> {{ datos_comprador.giro }}</p>
+                    <p><strong>Dirección Tributaria:</strong> {{ datos_comprador.DireccionTributaria }}</p>
+                    <p><strong>Región:</strong> {{ datos_comprador.region }}</p>
+                    <p><strong>Comuna:</strong> {{ datos_comprador.comuna }}</p>
+                    <p><strong>Nombre Comprador:</strong> {{ datos_comprador.nombreComprador }}</p>
+                    <p><strong>RUT Comprador:</strong> {{ datos_comprador.rutComprador }}</p>
+                    <p><strong>Correo Comprador:</strong> {{ datos_comprador.correoComprador }}</p>
+                    <p><strong>Número de Contacto:</strong> {{ datos_comprador.numeroContacto }}</p>
+                </div>
+            </div>
+            
+            <!-- Sección de confirmación del plan seleccionado -->
+            <div class="card">
+                <div class="card-header">
+                    <h3>Detalles del Plan Seleccionado</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Descripción:</strong> {{ plan_seleccionado.description }}</p>
+                    <p><strong>Precio Unitario:</strong> {{ plan_seleccionado.unit_price }} {{ plan_seleccionado.currency_id }}</p>
+                </div>
+            </div>
+            
+            <!-- Opciones de edición y confirmación -->
+            <div class="text-center mt-4">
+                <a href="#" class="btn btn-primary">Editar Datos</a>
+                <a href="{% url 'GenerarOrdenDeCompra' %}" class="btn btn-success">Confirmar Compra</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+{% endblock %}

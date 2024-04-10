@@ -1,0 +1,42 @@
+{% extends "KabasisWebApp/base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Reportar un Problema o Sugerencia</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="#">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="tipoReporte">Tipo de Reporte</label>
+                            <select class="form-control" id="tipoReporte" name="tipo">
+                                <option value="tecnico">Técnico</option>
+                                <option value="contenido">Contenido</option>
+                                <option value="seguridad">Seguridad</option>
+                                <option value="sugerencia">Sugerencia</option>
+                                <option value="consulta">Consulta</option>
+                                <option value="feedback">Feedback General</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="tituloReporte">Título/Asunto</label>
+                            <input type="text" class="form-control" id="tituloReporte" name="titulo" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="descripcionReporte">Descripción</label>
+                            <textarea class="form-control" id="descripcionReporte" name="descripcion" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Enviar Reporte</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
