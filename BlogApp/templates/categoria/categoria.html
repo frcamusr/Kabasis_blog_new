@@ -4,26 +4,34 @@
    
 {% block content%}
 
-<section>
+
+<section class="page-section cta" style="margin-top: 30px; margin-bottom: 30px;">
 
    <div style="width: 75%; margin: auto; text-align: center; color: white;">
 
-      Categorias:
+      <div class="text-center">
+         <a class="btn btn-info fas fa-arrow-left d-flex float-left" href="{% url 'post' %}">&nbsp;Atrás</a>
+      </div>
+      <br><br>
+      <div style="margin-bottom: 50px;">
+         <h1>{{categorias.titulo}}</h1>
+      </div>
+
+      <!--
+      Post:
 
       {% for post in posts %}
 
          {% for categoria in post.categorias.all %}
 
-            &nbsp; &nbsp; {{categoria.titulo}} &nbsp; &nbsp; &nbsp
+            &nbsp; &nbsp; {{post.titulo}} &nbsp; &nbsp; &nbsp
 
          {% endfor %}
 
       {% endfor %}
+      -->
 
    </div>
-
- </section>
- <br>
 
     {% for post in posts %}   
 
@@ -36,19 +44,12 @@
                   <span class="section-heading-lower">{{post.titulo}}</span>
                   <span class="section-heading-upper">{{post.contenido}}</span>
                </h2>  
-               
-               <div style="text-align: left;">
-
-                  Autor: {{post.autor}}
-
-               </div>
-
             </div>
             </div>
          </div>
       </section>
     {% endfor%}
-
+</section>
     
 
 {% endblock %}

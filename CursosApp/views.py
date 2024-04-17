@@ -94,45 +94,35 @@ from django.db.models import Q
 
 @login_required
 def ver_curso(request, id):
-    # Verifica si hay cursos en la base de datos
     if not Curso.objects.exists():
         if request.user.tipo_usuario == 'Administrador Kabasis':
             return redirect('agregar_curso')
         if request.user.tipo_usuario in ['Administrador', 'Alumno']:
-            messages.success(request, "WARNING:Aún no se crean cursos en la plataforma")
+            messages.success(request, "WARNING: Aún no se crean cursos en la plataforma")
             return redirect('Home')
 
     curso = get_object_or_404(Curso, id=id)
     unidades = UnidadCurso.objects.filter(curso=curso).order_by('orden')
 
     ultima_unidad_aprobada_orden = ProgresoUnidad.objects.filter(
-        user=request.user,
-        unidad__curso=curso,
+        user=request.user, 
+        unidad__curso=curso, 
         aprobado=True
     ).aggregate(Max('unidad__orden'))['unidad__orden__max'] or 0
 
     unidad_siguiente = UnidadCurso.objects.filter(
-        curso=curso,
+        curso=curso, 
         orden__gt=ultima_unidad_aprobada_orden
-    ).order_by('orden').first()
+    ).first()
 
-    # Esta sección se mantiene igual
-    ids_unidades_aprobadas = ProgresoUnidad.objects.filter(
-        user=request.user, 
-        unidad__curso=curso, 
-        aprobado=True
-    ).values_list('unidad_id', flat=True)
-    
-    for unidad in unidades:
-        unidad.aprobada = unidad.id in ids_unidades_aprobadas
-
-    # Recalcular el avance de la unidad siguiente si es necesario
     if unidad_siguiente:
         progreso_unidad_actual = Progreso.objects.filter(user=request.user, unidad=unidad_siguiente).first()
         if progreso_unidad_actual:
             videos_vistos_count = progreso_unidad_actual.videos_vistos.count()
-            quizzes_aprobados_count = QuizProgreso.objects.filter(progreso=progreso_unidad_actual, aprobado=True).count()
-
+            quizzes_aprobados_count = QuizProgreso.objects.filter(
+                progreso=progreso_unidad_actual, 
+                aprobado=True
+            ).count()
             contenido_avance = videos_vistos_count + quizzes_aprobados_count
             total_contenidos_unidad = QuizContent.objects.filter(unidad=unidad_siguiente).count() + Video.objects.filter(unidad=unidad_siguiente).count()
 
@@ -143,15 +133,34 @@ def ver_curso(request, id):
                     defaults={'aprobado': True}
                 )
 
-    # Comprobar si se ha completado todo el curso
-    todos_los_videos = Video.objects.filter(curso=curso).count()
-    todos_los_quizzes = QuizContent.objects.filter(curso=curso).count()
-    videos_vistos = Progreso.objects.filter(user=request.user, videos_vistos__curso=curso).distinct().count()
-    quizzes_aprobados = QuizProgreso.objects.filter(progreso__user=request.user, progreso__unidad__curso=curso, aprobado=True).distinct().count()
-    curso_completado = (todos_los_videos == videos_vistos) and (todos_los_quizzes == quizzes_aprobados)
-
+    # Definición de quiz y video
     quiz = QuizContent.objects.filter(curso=curso).order_by('orden')
     video = Video.objects.filter(curso=curso).order_by('orden')
+
+    todos_los_videos = Video.objects.filter(curso=curso).count()
+    todos_los_quizzes = QuizContent.objects.filter(curso=curso).count()
+
+    videos_vistos = Progreso.objects.filter(
+        user=request.user,
+        videos_vistos__curso=curso
+    ).distinct().count()
+
+    quizzes_aprobados = QuizProgreso.objects.filter(
+        progreso__user=request.user, 
+        progreso__unidad__curso=curso, 
+        aprobado=True
+    ).distinct().count()
+
+    curso_completado = (todos_los_videos == videos_vistos) and (todos_los_quizzes == quizzes_aprobados)
+
+    ids_unidades_aprobadas = ProgresoUnidad.objects.filter(
+        user=request.user, 
+        unidad__curso=curso, 
+        aprobado=True
+    ).values_list('unidad_id', flat=True)
+    
+    for unidad in unidades:
+        unidad.aprobada = unidad.id in ids_unidades_aprobadas
 
     data = {
         'curso': curso,
@@ -163,6 +172,7 @@ def ver_curso(request, id):
     }
 
     return render(request, 'CursosApp/ver_curso.html', data)
+
 
 
 

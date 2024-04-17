@@ -1,0 +1,50 @@
+{% extends "KabasisWebApp/base.html"%}
+
+{% load static %}
+
+{% block content%}
+
+<section class="page-section cta" style="margin-top: 30px; margin-bottom: 30px;">
+
+
+   <div style="width: 75%; margin: auto; text-align: center; color: white;">
+      {% if user.tipo_usuario == "Administrador Kabasis" %}
+      <div class="text-center">
+         <a class="btn btn-info btn-block" href="{% url 'listar_categoria' %}" style="margin-bottom: 20px; border-radius: 15%;">Administrar categorias</a>
+         <a class="btn btn-info btn-block" href="{% url 'listar_post' %}" style="margin-bottom: 20px; border-radius: 15%;">Administrar blogs</a>
+      </div>
+      {% endif %}
+
+      Categorias:
+
+      {% for categoria in categorias %}
+
+      &nbsp; &nbsp; <a href="{% url 'categoria' categoria.id %}" class="linksCategorias">{{categoria}}</a> &nbsp; &nbsp;
+
+      {% endfor %}
+
+   </div>
+
+
+<br>
+
+{% for post in posts %}
+
+<section class="page-section clearfix" style="margin-bottom: 60px;">
+   <div class="container">
+      <div class="intro1">
+         <img class="intro-img1 img-fluid mb-3 mb-lg-0 rounded" src="{{post.imagen.url}}" alt="" style="width: 50%;">
+         <div class="intro-text1 left-0 text-center bg-faded p-5 rounded">
+            <h2 class="section-heading mb-4">
+               <span class="section-heading-lower">{{post.titulo}}</span>
+               <span class="section-heading-upper">{{post.contenido}}</span>
+            </h2>
+         </div>
+      </div>
+   </div>
+</section>
+{% endfor%}
+
+</section>
+
+{% endblock %}

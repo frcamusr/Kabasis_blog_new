@@ -1,7 +1,5 @@
 from django.db import models
 
-# Create your models here.
-
 from AutenticacionApp.models import CustomUser
 
 class Categoria(models.Model):
@@ -22,7 +20,7 @@ class Post(models.Model):
     titulo = models.CharField(max_length=20)
     contenido = models.CharField(max_length=50)
     imagen = models.ImageField(upload_to='blog', null=True, blank = True)
-    autor = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    autor = models.ForeignKey(CustomUser, on_delete=models.CASCADE, blank=True, null=True)
     categorias = models.ManyToManyField(Categoria)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -33,3 +31,4 @@ class Post(models.Model):
 
     def __str__(self):
         return self.titulo
+
